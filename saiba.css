@@ -87,16 +87,20 @@ margin-bottom: -30px;
 }
 
 #container2{
-margin-top: 40px;
-flex-wrap: wrap;
-background-position: center center;
-background-repeat: no-repeat;
-background-size: contain;
-background-attachment: scroll;
-padding: 150px;
-flex-wrap: wrap; 
-display: block;
-background-image: url('cross2.jpg'); 
+
+  margin-top:40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll;
+  padding: 150px 20px;
+  color: white;
+  text-align: center;
+background-image: url('./cross2.jpg'); 
 
 
 }
@@ -126,7 +130,7 @@ background-attachment: fixed;
 padding: 150px;
 flex-wrap: wrap; 
 display: block;
-background-image: url('cross3.jpg');
+background-image: url('./cross3.jpg');
 
 
 }
@@ -158,7 +162,7 @@ background-attachment: fixed;
 padding: 150px;
 flex-wrap: wrap; 
 display: block;
-background-image: url('cross4.jpg');
+background-image: url('./cross4.jpg');
 
 
 }

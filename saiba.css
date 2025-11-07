@@ -59,17 +59,7 @@ margin-bottom: -30px;
   padding: 150px 20px;
   color: white;
   text-align: center;
-  
-  /* margin-top: 40px;
-flex-wrap: wrap;
-background-position: center center;
-background-repeat: no-repeat;
-background-size: contain;
-background-attachment: fixed;
-padding: 150px;
-flex-wrap: wrap; 
-display: block;
-background-image: url('cross11.jpg'); */
+
 
 }
 
@@ -120,17 +110,19 @@ margin-bottom: -30px;
 
 #container3{
 
-object-fit: cover;
-margin-top: 40px;
-flex-wrap: wrap;
-background-position: center center;
-background-repeat: no-repeat;
-background-size: contain;
-background-attachment: fixed;
-padding: 150px;
-flex-wrap: wrap; 
-display: block;
-background-image: url('./cross3.jpg');
+  margin-top:40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll;
+  padding: 150px 20px;
+  color: white;
+  text-align: center;
+background-image: url('./cross3.jpg'); 
 
 
 }
@@ -152,18 +144,20 @@ margin-bottom: -30px;
 
 #container4{
 
-object-fit: cover;
-margin-top: 40px;
-flex-wrap: wrap;
-background-position: center center;
-background-repeat: no-repeat;
-background-size: contain;
-background-attachment: fixed;
-padding: 150px;
-flex-wrap: wrap; 
-display: block;
-background-image: url('./cross4.jpg');
 
+  margin-top:40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll;
+  padding: 150px 20px;
+  color: white;
+  text-align: center;
+background-image: url('./cross4.jpg'); 
 
 }
 

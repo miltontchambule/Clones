@@ -3,7 +3,7 @@
 
 const pontos = document.querySelectorAll('.ponto');
 const imagemPrincipal = document.querySelector('.imagem-principal img');
-const imagens = ['20.JPG', '16.JPG', '11.JPG', '15.JPG']; //array de imagens
+const imagens = ['16.JPG', '11.jpg', '15.JPG']; //array de imagens
 
 
 let indiceAtual = 0;

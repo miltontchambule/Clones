@@ -92,7 +92,7 @@ flex-wrap: wrap;
 background-position: center center;
 background-repeat: no-repeat;
 background-size: contain;
-background-attachment: fixed;
+background-attachment: scroll;
 padding: 150px;
 flex-wrap: wrap; 
 display: block;

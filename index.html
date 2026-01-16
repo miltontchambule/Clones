@@ -1,841 +1,232 @@
 <!DOCTYPE html>
-
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <title>O Cafezinho</title>
+    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Orçamento</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 20px;
-    }
-
-    .container {
-        max-width: 400px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 20px;
-        padding: 25px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    }
-
-    .header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .header h1 {
-        color: #333;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .budget-display {
-        background: linear-gradient(135deg, #4CAF50, #45a049);
-        color: white;
-        padding: 20px;
-        border-radius: 15px;
-        text-align: center;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
-    }
-
-    .budget-display h2 {
-        font-size: 14px;
-        opacity: 0.9;
-        margin-bottom: 5px;
-    }
-
-    .budget-display .amount {
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .input-section {
-        margin-bottom: 25px;
-    }
-
-    .input-group {
-        margin-bottom: 15px;
-    }
-
-    .input-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #333;
-    }
-
-    .input-group input {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
-        font-size: 16px;
-        transition: border-color 0.3s;
-    }
-
-    .input-group input:focus {
-        outline: none;
-        border-color: #667eea;
-    }
-
-    .btn {
-        width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        margin-bottom: 10px;
-    }
-
-    .btn:active {
-        transform: translateY(2px);
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    .btn-danger {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-        color: white;
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-    }
-
-    .expenses-list {
-        max-height: 200px;
-        overflow-y: auto;
-        margin-bottom: 20px;
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        padding: 10px;
-    }
-
-    .expense-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        margin-bottom: 8px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        border-left: 4px solid #667eea;
-    }
-
-    .expense-item:last-child {
-        margin-bottom: 0;
-    }
-
-    .expense-info {
-        flex: 1;
-    }
-
-    .expense-name {
-        font-weight: 600;
-        color: #333;
-        font-size: 14px;
-    }
-
-    .expense-date {
-        font-size: 12px;
-        color: #666;
-    }
-
-    .expense-amount {
-        font-weight: bold;
-        color: #e74c3c;
-    }
-
-    .stats-section {
-        margin-top: 25px;
-    }
-
-    .stat-card {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        border-left: 4px solid #667eea;
-    }
-
-    .stat-card h3 {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 5px;
-    }
-
-    .stat-card .value {
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .chart-container {
-        margin-top: 20px;
-        height: 250px;
-        position: relative;
-    }
-
-    .prediction-alert {
-        background: linear-gradient(135deg, #ffecd2, #fcb69f);
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 15px;
-        border-left: 4px solid #ff6b6b;
-    }
-
-    .prediction-alert h4 {
-        color: #d63031;
-        margin-bottom: 8px;
-    }
-
-    .prediction-alert p {
-        color: #2d3436;
-        font-size: 14px;
-    }
-
-    .no-data {
-        text-align: center;
-        color: #666;
-        font-style: italic;
-        padding: 20px;
-    }
-
-    .tabs {
-        display: flex;
-        margin-bottom: 20px;
-        background: #f0f0f0;
-        border-radius: 10px;
-        padding: 4px;
-    }
-
-    .tab {
-        flex: 1;
-        padding: 10px;
-        text-align: center;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-
-    .tab.active {
-        background: white;
-        color: #667eea;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .tab-content {
-        display: none;
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    /* Modo Escuro */
-    .dark-mode {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    }
-
-    .dark-mode .container {
-        background: #2c3e50;
-        color: white;
-    }
-
-    .dark-mode .header h1 {
-        color: white;
-    }
-
-    .dark-mode .input-group label {
-        color: white;
-    }
-
-    .dark-mode .input-group input {
-        background: #34495e;
-        border-color: #4a5f7a;
-        color: white;
-    }
-
-    .dark-mode .input-group input::placeholder {
-        color: #bdc3c7;
-    }
-
-    .dark-mode .input-group input:focus {
-        border-color: #667eea;
-    }
-
-    .dark-mode .expenses-list {
-        border-color: #4a5f7a;
-        background: #34495e;
-    }
-
-    .dark-mode .expense-item {
-        background: #34495e;
-        border-left-color: #667eea;
-    }
-
-    .dark-mode .expense-name {
-        color: white;
-    }
-
-    .dark-mode .expense-date {
-        color: #bdc3c7;
-    }
-
-    .dark-mode .stat-card {
-        background: #34495e;
-        border-left-color: #667eea;
-    }
-
-    .dark-mode .stat-card h3 {
-        color: #bdc3c7;
-    }
-
-    .dark-mode .stat-card .value {
-        color: white;
-    }
-
-    .dark-mode .tabs {
-        background: #34495e;
-    }
-
-    .dark-mode .tab {
-        color: #bdc3c7;
-    }
-
-    .dark-mode .tab.active {
-        background: #4a5f7a;
-        color: white;
-    }
-
-    .dark-mode .no-data {
-        color: #bdc3c7;
-    }
-
-    /* Botão de modo */
-    .theme-toggle {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        background: rgba(255, 255, 255, 0.9);
-        border: none;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        font-size: 20px;
-        transition: all 0.3s;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        z-index: 1000;
-    }
-
-    .theme-toggle:hover {
-        transform: scale(1.1);
-    }
-
-    .dark-mode .theme-toggle {
-        background: rgba(44, 62, 80, 0.9);
-        color: white;
-    }
-</style>
-
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-    <div class="container">
-        <div class="header">
-            <h1>Gestor de Orçamento</h1>
-            <div class="budget-display">
-                <h2>ORÇAMENTO RESTANTE</h2>
-                <div class="amount" id="remainingBudget">MT 0,00</div>
-            </div>
-        </div>
 
-    <div class="tabs">
-        <div class="tab active" onclick="showTab('budget')">Orçamento</div>
-        <div class="tab" onclick="showTab('stats')">Estatísticas</div>
-    </div>
+<header>
 
-    <div id="budgetTab" class="tab-content active">
-        <div class="input-section">
-            <div class="input-group">
-                <label>Orçamento Mensal Total</label>
-                <input type="number" id="totalBudget" placeholder="Ex: 1000" step="0.01">
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-primary" id="setBudgetBtn" onclick="setBudget()" style="flex: 1;">Definir Orçamento</button>
-                    <button class="btn btn-primary" id="addBudgetBtn" onclick="addToBudget()" style="flex: 1; display: none;">Adicionar ao Orçamento</button>
-                </div>
-            </div>
-        </div>
+     <div class="logo"><img src="ocafezinho/logo10.PNG" alt="logotipo"></div>
+   
+     <nav class="menu">
+   
+        <ul class="nav-links">
+             <li><a href="#">Pedir Cafe</a></li>   
+             <li><a href="#">Nós</a></li>        
+             <li> <a href="#">Blog</a></li>      
+             <li><a href="#">Localização</a></li>
+             <li><a href="#">Contactos</a></li>  
 
-        <div class="input-section">
-            <div class="input-group">
-                <label>Produto/Serviço</label>
-                <input type="text" id="expenseName" placeholder="Ex: Supermercado">
-            </div>
-            <div class="input-group">
-                <label>Data do Gasto</label>
-                <input type="date" id="expenseDate">
-            </div>
-            <div class="input-group">
-                <label>Valor Gasto (MT)</label>
-                <input type="number" id="expenseAmount" placeholder="Ex: 25.50" step="0.01">
-                <button class="btn btn-primary" onclick="addExpense()">Adicionar Gasto</button>
-            </div>
-        </div>
+        </ul>
+     
+    </nav> 
+    
+    <!-- MENU HAMBURGUER -->
+         <div class="botao-menu" id="botao-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+         </div> 
+</header>
 
-        <div class="expenses-list" id="expensesList">
-            <div class="no-data">Nenhum gasto registado ainda</div>
-        </div>
 
-        <button class="btn btn-danger" onclick="clearAllData()">Limpar Todos os Dados</button>
-        <button class="btn btn-danger" onclick="resetApp()" style="margin-top: 5px;">Resetar App Completamente</button>
-    </div>
 
-    <div id="statsTab" class="tab-content">
-        <div class="stats-section">
-            <div class="stat-card">
-                <h3>Total Gasto Este Mês</h3>
-                <div class="value" id="totalSpent">MT 0,00</div>
-            </div>
-            <div class="stat-card">
-                <h3>Gasto Médio por Compra</h3>
-                <div class="value" id="averageSpend">MT 0,00</div>
-            </div>
-            <div class="stat-card">
-                <h3>Número de Compras</h3>
-                <div class="value" id="totalPurchases">0</div>
-            </div>
-        </div>
 
-        <div class="chart-container">
-            <canvas id="spendingChart"></canvas>
-        </div>
-
-        <div id="prediction" class="prediction-alert" style="display: none;">
-            <h4>⚠️ Previsão de Orçamento</h4>
-            <p id="predictionText"></p>
+<section class="hero">
+    <div class="hero-text">
+        <h1>Faz-te Dizer Ahh...<br></h1>
+        <p>Café artesanal da terra e de qualidade.</p>
+        <div class="buttons">
+            <a href="#" class="order">Pedir Online</a>
+            <a href="#" class="map">Perto de ti</a>
         </div>
     </div>
-</div>
+</section>
 
-<script>
-    // Dados da aplicação
-    let budgetData = {
-        totalBudget: 0,
-        expenses: [],
-        remainingBudget: 0
-    };
 
-    let chart = null;
+ <!-- cards da seccao de produtos -->
 
-    // Mudar tema
-    function toggleTheme() {
-        const body = document.body;
-        const themeToggle = document.querySelector('.theme-toggle');
-        
-        if (body.classList.contains('dark-mode')) {
-            body.classList.remove('dark-mode');
-            themeToggle.textContent = '🌙';
-            document.cookie = 'darkMode=false; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
-        } else {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-            document.cookie = 'darkMode=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
-        }
-    }
 
-    // Carregar tema salvo
-    function loadTheme() {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'darkMode' && value === 'true') {
-                document.body.classList.add('dark-mode');
-                document.querySelector('.theme-toggle').textContent = '☀️';
-                return;
-            }
-        }
-    }
+ <section id="produtos">
+    
+    <!-- titulo da seccao -->
+    <h2 class="titulo">Nossos Cafés Especiais</h2>
+ <br>
+    <!-- cards  -->
+    <div class="producto">
+        <div class="producto-card">
+            <div class="product-icon"></div>
 
-    // Carregar dados ao iniciar
-    window.onload = function() {
-        loadTheme();
-        loadData();
-        updateDisplay();
-        updateStats();
-    };
-
-    // Salvar dados no armazenamento local
-    function saveData() {
-        const dataStr = JSON.stringify(budgetData);
-        document.cookie = `budgetData=${dataStr}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-    }
-
-    // Carregar dados do armazenamento local
-    function loadData() {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'budgetData') {
-                try {
-                    budgetData = JSON.parse(decodeURIComponent(value));
-                    return;
-                } catch (e) {
-                    console.error('Erro ao carregar dados:', e);
-                }
-            }
-        }
-    }
-
-    // Definir orçamento
-    function setBudget() {
-        const totalBudget = parseFloat(document.getElementById('totalBudget').value);
-        
-        if (isNaN(totalBudget) || totalBudget <= 0) {
-            alert('Por favor, insira um valor válido para o orçamento');
-            return;
-        }
-
-        budgetData.totalBudget = totalBudget;
-        budgetData.remainingBudget = totalBudget - getTotalSpent();
-        
-        // Mudar interface após definir orçamento
-        document.getElementById('setBudgetBtn').style.display = 'none';
-        document.getElementById('addBudgetBtn').style.display = 'block';
-        document.getElementById('totalBudget').previousElementSibling.textContent = 'Adicionar ao Orçamento';
-        document.getElementById('totalBudget').placeholder = 'Ex: 200 (valor adicional)';
-        
-        saveData();
-        updateDisplay();
-        updateStats();
-        
-        document.getElementById('totalBudget').value = '';
-        alert('Orçamento definido com sucesso!');
-    }
-
-    // Adicionar ao orçamento existente
-    function addToBudget() {
-        const additionalBudget = parseFloat(document.getElementById('totalBudget').value);
-        
-        if (isNaN(additionalBudget) || additionalBudget <= 0) {
-            alert('Por favor, insira um valor válido para adicionar ao orçamento');
-            return;
-        }
-
-        budgetData.totalBudget += additionalBudget;
-        budgetData.remainingBudget += additionalBudget;
-        
-        saveData();
-        updateDisplay();
-        updateStats();
-        
-        document.getElementById('totalBudget').value = '';
-        alert(`MT ${additionalBudget.toFixed(2)} adicionados ao orçamento com sucesso!`);
-    }
-
-    // Adicionar gasto
-    function addExpense() {
-        const name = document.getElementById('expenseName').value.trim();
-        const dateInput = document.getElementById('expenseDate').value;
-        const amount = parseFloat(document.getElementById('expenseAmount').value);
-
-        if (!name) {
-            alert('Por favor, insira o nome do produto/serviço');
-            return;
-        }
-
-        if (!dateInput) {
-            alert('Por favor, selecione a data do gasto');
-            return;
-        }
-
-        if (isNaN(amount) || amount <= 0) {
-            alert('Por favor, insira um valor válido para o gasto');
-            return;
-        }
-
-        // Converter data para formato dia/mês/ano
-        const dateObj = new Date(dateInput);
-        const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
-
-        const expense = {
-            id: Date.now(),
-            name: name,
-            amount: amount,
-            date: formattedDate
-        };
-
-        budgetData.expenses.push(expense);
-        budgetData.remainingBudget = budgetData.totalBudget - getTotalSpent();
-
-        saveData();
-        updateDisplay();
-        updateStats();
-
-        document.getElementById('expenseName').value = '';
-        document.getElementById('expenseDate').value = '';
-        document.getElementById('expenseAmount').value = '';
-    }
-
-    // Calcular total gasto
-    function getTotalSpent() {
-        return budgetData.expenses.reduce((total, expense) => total + expense.amount, 0);
-    }
-
-    // Atualizar exibição
-    function updateDisplay() {
-        document.getElementById('remainingBudget').textContent = `MT ${budgetData.remainingBudget.toFixed(2)}`;
-        
-        // Verificar se já existe orçamento definido
-        if (budgetData.totalBudget > 0) {
-            document.getElementById('setBudgetBtn').style.display = 'none';
-            document.getElementById('addBudgetBtn').style.display = 'block';
-            document.getElementById('totalBudget').previousElementSibling.textContent = 'Adicionar ao Orçamento';
-            document.getElementById('totalBudget').placeholder = 'Ex: 200 (valor adicional)';
-        }
-        
-        const expensesList = document.getElementById('expensesList');
-        
-        if (budgetData.expenses.length === 0) {
-            expensesList.innerHTML = '<div class="no-data">Nenhum gasto registado ainda</div>';
-            return;
-        }
-
-        expensesList.innerHTML = budgetData.expenses.map(expense => `
-            <div class="expense-item">
-                <div class="expense-info">
-                    <div class="expense-name">${expense.name}</div>
-                    <div class="expense-date">${expense.date}</div>
-                </div>
-                <div class="expense-amount">MT ${expense.amount.toFixed(2)}</div>
+            <!-- card description -->
+            <h3>Iced Cappuccino</h3>
+            <div>
+               <img src="../site1/ocafezinho/iced250.PNG" alt="cappuccino"> 
             </div>
-        `).reverse().join('');
-    }
-
-    // Atualizar estatísticas
-    function updateStats() {
-        const totalSpent = getTotalSpent();
-        const averageSpend = budgetData.expenses.length > 0 ? totalSpent / budgetData.expenses.length : 0;
+            <p>Cappuccino refrescante e cremoso, com camadas suaves de leite gelado e café intenso, servido com gelo cristalino. 
+            </p>
+        </div>
         
-        document.getElementById('totalSpent').textContent = `MT ${totalSpent.toFixed(2)}`;
-        document.getElementById('averageSpend').textContent = `MT ${averageSpend.toFixed(2)}`;
-        document.getElementById('totalPurchases').textContent = budgetData.expenses.length;
+        <!-- cards  -->
+        <div class="producto-card">
+            <div class="product-icon"></div>
+            
+             <!-- card description -->
+            <h3>Frappuccino</h3>
+            <div >
+               <img src="../site1/ocafezinho/frappuccino250.png" alt="cappuccino"> 
+            </div>
+            <p>
+Preparado com café batido no gelo, textura cremosa, coberto com chantilly macio e finalizado com calda de chocolate.
+</p>
+        </div>
 
-        updateChart();
-        updatePrediction();
-    }
+        <!-- cards -->
+        <div class="producto-card">
+            <div class="producto-icon"></div>
+           
+            <!-- card description -->
+             
+            <h3>Cappuccino</h3>
+            <div>
+               <img src="../site1/ocafezinho/cappuccio250.png" alt="cappuccino"> 
+            </div>
+            <p>Cremoso e delicioso, com a proporção perfeita de espresso, leite vaporizado e espuma.</p>
+        </div>
+    </div>
 
-    // Atualizar gráfico
-    function updateChart() {
-        const ctx = document.getElementById('spendingChart').getContext('2d');
+         <br>
+       
+          
+
+</section>
+
+  <div class="show-menu">
+                <a class="click-menu" href="#">Menu</a>
+         </div>
+    <br>
+<br>
+
+
+<section class="about-us-container">
+    <div class="about-us-content">
+        <div>
+            <h2 class="about-title">Um Pouco Sobre Nós</h2>
+            <p> <br>
+                Inspirados pela cultura africana, criamos espaços acolhedores
+                onde amigos se encontram e histórias nascem. Cada chávena é preparada manualmente com grãos selecionados
+              etur dolores fuga ex praesentium iste qui pariatur doloremque autem beatae soluta voluptas?
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi recusandae soluta nostrum ad. Deleniti sit magni quasi consequatur nec
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, vero minus, dolores corrupti atque omnis doloremque ex voluptates consectetur unde qui distinctio deleniti vel libero veniam, commodi inventore earum ratione!
+            </p> <br>
+
+
+        </div>
+    </div>
+</section>
+
+<section class="socials">
+    
+<h2>A mesma essência, em diferentes chávenas! </h2>
+<br>
+
+    <div class="socials-container">
+        <a href="https://wa.me/258876972509" target="_blank"><img src="ocafezinho/whatsapp140.PNG" alt="whatsapp"  class="icons"></a>
+        <a href="#"><img src="ocafezinho/ig140.PNG" alt="instagram" class="icons" ></a>
+        <a href="#"><img src="ocafezinho/facebook140.PNG" alt="facebook" class="icons"></a>
+        <a href="#"><img src="ocafezinho/tiktok140.PNG" alt="tiktok" class="icons"></a>
+    </div>
+
+  
+</section>
+
+
+<section class="locations-container">
+
+    <h2 id="location-title">Localização</h2>
+     <div class="iframe">
+
+           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3586.75506676779!2d32.5820344!3d-25.9760721!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ee69b76d616b7e7%3A0x4e7bc9ea2507d925!2sJAT%20Center!5e0!3m2!1spt-PT!2smz!4v1768562130223!5m2!1spt-PT!2smz" 
+           width="600" height="450"3 style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      
+        </div>
+    <div class="locations">
+       
+        <div class="city">
+
+            <h3>Maputo</h3>
+            <p>Av. 24 de Julho, no. 344<br>Maputo, Moçambique</p>
+        </div>
+
+        <br>
+
+        <div class="city">
+
+            <h3>Maputo</h3>
+            <p>Rua dos Desportistas, Jat Center, no. 23<br>Maputo, Moçambique</p>
+        </div>
+
+        <br>
+
+        <div class="city">
+
+                <h3 >Matola</h3>
+            <p>Matola-Rio, Max Plaza, no.4<br>Matola, Moçambique</p>
+        </div>
+
         
-        if (chart) {
-            chart.destroy();
-        }
+    </div>
 
-        if (budgetData.expenses.length === 0) {
-            return;
-        }
 
-        // Agrupar gastos por categoria (primeiras 10 compras ou últimos 7 dias)
-        const last7Days = budgetData.expenses.slice(-7);
-        const labels = last7Days.map(expense => expense.name);
-        const data = last7Days.map(expense => expense.amount);
+    <!-- seccao com informacoes de contactos do website e do desenvolvedor -->
+    <section class="informacoes">
+<img src="ocafezinho/logowhite100.PNG" alt="logotipo" class="logo-pequeno">  <br>
 
-        chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Gastos (MT)',
-                    data: data,
-                    backgroundColor: [
-                        '#667eea', '#764ba2', '#f093fb', '#f5576c',
-                        '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
-                        '#ffecd2', '#fcb69f', '#a8edea', '#fed6e3'
-                    ],
-                    borderRadius: 8,
-                    borderSkipped: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0,0,0,0.1)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-    }
 
-    // Atualizar previsão
-    function updatePrediction() {
-        const predictionDiv = document.getElementById('prediction');
-        const predictionText = document.getElementById('predictionText');
+        <div class="container-informacoes">
 
-        if (budgetData.expenses.length < 2 || budgetData.totalBudget === 0) {
-            predictionDiv.style.display = 'none';
-            return;
-        }
-
-        // Calcular média diária de gastos
-        const daysSinceFirstExpense = getDaysSinceFirstExpense();
-        const totalSpent = getTotalSpent();
-        const dailyAverage = totalSpent / Math.max(daysSinceFirstExpense, 1);
+            
+        <div class="contactos">
         
-        // Calcular quantos dias restam
-        const remainingBudget = budgetData.remainingBudget;
-        const daysRemaining = remainingBudget / dailyAverage;
+            <h3>Contactos</h3> 
+            <br>
+                <p>+258 8X XXX XXXX</p>
+                <p>+258 8X XXX XXXX</p>
+                <p>ocafezinho@info.co.mz</p>
+                <p>www.ocafezinho.mz</p>
+        </div>
 
-        predictionDiv.style.display = 'block';
-
-        if (daysRemaining < 0) {
-            predictionText.innerHTML = `
-                <strong>Orçamento esgotado!</strong><br>
-                Já gastou MT ${Math.abs(remainingBudget).toFixed(2)} acima do orçamento.
-            `;
-        } else if (daysRemaining < 7) {
-            predictionText.innerHTML = `
-                <strong>Atenção!</strong> Ao ritmo atual de gastos (MT ${dailyAverage.toFixed(2)}/dia), 
-                o seu orçamento irá esgotar em aproximadamente <strong>${Math.floor(daysRemaining)} dias</strong>.
-            `;
-        } else {
-            const endDate = new Date();
-            endDate.setDate(endDate.getDate() + daysRemaining);
-            predictionText.innerHTML = `
-                Com base no seu padrão de gastos atual, o orçamento deverá durar até aproximadamente 
-                <strong>${endDate.toLocaleDateString('pt-PT')}</strong> (${Math.floor(daysRemaining)} dias).
-            `;
-        }
-    }
-
-    // Calcular dias desde a primeira compra
-    function getDaysSinceFirstExpense() {
-        if (budgetData.expenses.length === 0) return 0;
+        <div class="extra-info"> 
+            <h3>O Desenvolvedor</h3>
+            <br>
         
-        const firstExpenseDate = new Date(budgetData.expenses[0].date.split('/').reverse().join('/'));
-        const today = new Date();
-        const diffTime = Math.abs(today - firstExpenseDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        return Math.max(diffDays, 1);
-    }
+                <p>Milton Tchambule</p>
+                <p>+258 87 697 2509/82 697 2504</p>
+                <p>miltonchambule83@gmail.com</p>
+                <p>Cidade de Maputo</p>
+              </div>
 
-    // Resetar app completamente
-    function resetApp() {
-        if (confirm('Tem certeza que deseja resetar completamente a app? Todos os dados serão perdidos definitivamente.')) {
-            // Resetar dados completamente
-            budgetData = {
-                totalBudget: 0,
-                expenses: [],
-                remainingBudget: 0
-            };
-            
-            // Limpar cookies
-            document.cookie = 'budgetData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            
-            // Resetar interface para estado inicial
-            document.getElementById('setBudgetBtn').style.display = 'block';
-            document.getElementById('addBudgetBtn').style.display = 'none';
-            document.getElementById('totalBudget').previousElementSibling.textContent = 'Orçamento Mensal Total';
-            document.getElementById('totalBudget').placeholder = 'Ex: 1000';
-            
-            // Limpar todos os campos
-            document.getElementById('totalBudget').value = '';
-            document.getElementById('expenseName').value = '';
-            document.getElementById('expenseDate').value = '';
-            document.getElementById('expenseAmount').value = '';
-            
-            // Atualizar displays
-            updateDisplay();
-            updateStats();
-            
-            // Destruir gráfico
-            if (chart) {
-                chart.destroy();
-                chart = null;
-            }
-            
-            alert('App resetada com sucesso! Todos os dados foram limpos.');
-        }
-    }
+    </div>
 
-    // Limpar todos os dados
-    function clearAllData() {
-        if (confirm('Tem certeza que quer apagar o histórico de gastos?')) {
-            budgetData.expenses = [];
-            budgetData.remainingBudget = budgetData.totalBudget;
-            
-            saveData();
-            updateDisplay();
-            updateStats();
-            
-            if (chart) {
-                chart.destroy();
-                chart = null;
-            }
-            
-            // Forçar atualização da interface
-            document.getElementById('totalSpent').textContent = 'MT 0,00';
-            document.getElementById('averageSpend').textContent = 'MT 0,00';
-            document.getElementById('totalPurchases').textContent = '0';
-            
-            alert('A lista de dados foi reposta com sucesso!');
-        }
-    }
+</section>
 
-    // Mudar abas
-    function showTab(tabName) {
-        // Remover classe ativa de todas as abas
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        
-        // Ativar aba selecionada
-        event.target.classList.add('active');
-        document.getElementById(tabName + 'Tab').classList.add('active');
-        
-        // Atualizar gráfico se for a aba de estatísticas
-        if (tabName === 'stats') {
-            setTimeout(() => {
-                updateChart();
-            }, 100);
-        }
-    }
-</script>
+<footer>
+  
+    <div class="footer">
+
+        <p>©2026. O Cafezinho. Todos os Direitos Reservados.</p>
+    <p><small>Desenvolvido por Milton Tchambule</small></p>
 
 
+    </div>
+
+     
+</footer>
+
+
+<script src="javascript.js"></script>
 </body>
 </html>
